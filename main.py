@@ -65,6 +65,7 @@ def parse_price(text, regex):
         return None
 
 def fetch_static(url, headers, timeout):
+    # Burada timeout eklendi ✅
     resp = requests.get(url, headers=headers, timeout=timeout)
     resp.raise_for_status()
     return resp.text
