@@ -1,0 +1,28 @@
+name: Stock Checker
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # her 10 dakikada bir çalışır
+  workflow_dispatch:          # elle çalıştırmak için buton ekler
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodları indir
+        uses: actions/checkout@v3
+
+      - name: Python kur
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Gerekli paketleri kur
+        run: pip install -r requirements.txt
+
+      - name: Scripti çalıştır
+        env:
+          ENV_VARS: ${{ secrets.ENV_VARS }}
+        run: |
+          echo "$ENV_VARS" > .env
+          python main.py
