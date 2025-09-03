@@ -2,7 +2,7 @@ name: Stock Checker
 
 on:
   schedule:
-    - cron: "*/10 * * * *"   # her 10 dakikada bir çalışır
+    - cron: "*/5 * * * *"   # her 10 dakikada bir çalışır
   workflow_dispatch:          # elle çalıştırmak için buton ekler
 
 jobs:
