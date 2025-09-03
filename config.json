@@ -1,0 +1,20 @@
+{
+  "checks": [
+    {
+      "name": "Khontkar – Pembe Trilogy",
+      "url": "https://dijitaldagitim.shop/urun/khontkar-pembe-trilogy-plak-500-adet-limited-edition-on-siparis",
+      "price_selector": "p.price span.woocommerce-Price-amount",
+      "price_regex": "([0-9]+[.,]?[0-9]*)",
+      "in_stock_selector": "p.stock",
+      "stock_number_regex": "([0-9]+) adet stokta",
+      "alert_stock_thresholds": [9, 5, 3, 2, 1],
+      "headers": {
+        "User-Agent": "Mozilla/5.0"
+      },
+      "dynamic": false
+    }
+  ],
+  "request_timeout_sec": 25,
+  "retries": 2,
+  "cooldown_minutes_after_alert": 60
+}
