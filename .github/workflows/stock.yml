@@ -2,15 +2,20 @@ name: Stock Checker
 
 on:
   schedule:
-    - cron: "*/5 * * * *"   # her 5 dakikada bir çalışır
-  workflow_dispatch:          # elle çalıştırmak için buton ekler
+    - cron: "*/5 * * * *"   # her 5 dakikada bir
+  workflow_dispatch:
+
+permissions:
+  contents: write   # state.json'ı commit edebilmek için
 
 jobs:
   run:
     runs-on: ubuntu-latest
     steps:
       - name: Kodları indir
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Python kur
         uses: actions/setup-python@v4
@@ -20,9 +25,28 @@ jobs:
       - name: Gerekli paketleri kur
         run: pip install -r requirements.txt
 
-      - name: Scripti çalıştır
+      # ENV_VARS tek secret'ından .env dosyası üret
+      - name: .env oluştur
         env:
           ENV_VARS: ${{ secrets.ENV_VARS }}
+        run: echo "$ENV_VARS" > .env
+
+      - name: Scripti çalıştır
+        run: python main.py
+
+      - name: state.json değiştiyse commit & push et
         run: |
-          echo "$ENV_VARS" > .env
-          python main.py
+          if [ -f state.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            # Sadece state.json değiştiyse commit et
+            if ! git diff --quiet -- state.json; then
+              git add state.json
+              git commit -m "Update state.json [skip ci]"
+              git push
+            else
+              echo "state.json değişmedi, commit gerek yok."
+            fi
+          else
+            echo "state.json bulunamadı."
+          fi
